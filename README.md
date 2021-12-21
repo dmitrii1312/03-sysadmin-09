@@ -129,3 +129,57 @@ Testing all IPv4 addresses (port 443): 217.69.139.200 94.100.180.201 217.69.139.
 debug1: Authentication succeeded (publickey).
 Authenticated to 192.168.22.12 ([192.168.22.12]:22).
 ```
+
+## 6 Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
+
+	# cd ~/.ssh
+	# mv id_rsa test_rsa
+	# mv id_rsa.pub
+	# vi config
+
+```
+Host test
+        IdentityFile ~/.ssh/test_rsa
+        HostName 192.168.22.12
+```
+
+	# chmod 700 config
+	# ssh test
+	
+## 7 Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
+
+	# tcpdump -i eth0 -s 0 -w wireshark.pcap -c 100
+	
+## 8 Просканируйте хост scanme.nmap.org. Какие сервисы запущены?
+
+```
+# nmap -sS scanme.nmap.org
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-12-21 17:18 UTC
+Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up (0.16s latency).
+Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+Not shown: 989 closed ports
+PORT      STATE    SERVICE
+22/tcp    open     ssh
+80/tcp    open     http
+135/tcp   filtered msrpc
+139/tcp   filtered netbios-ssn
+445/tcp   filtered microsoft-ds
+593/tcp   filtered http-rpc-epmap
+646/tcp   filtered ldp
+2869/tcp  filtered icslap
+5357/tcp  filtered wsdapi
+9929/tcp  open     nping-echo
+31337/tcp open     Elite
+
+Nmap done: 1 IP address (1 host up) scanned in 4.89 seconds
+```
+
+## 9 Установите и настройте фаервол ufw на web-сервер из задания 3. Откройте доступ снаружи только к портам 22,80,443
+
+```
+# ufw allow ssh/tcp
+# ufw allow 80/tcp
+# ufw allow 443/tcp
+# ufw enable
+```
